@@ -23,13 +23,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public void createUser(Long id, String name, String email) {
         if (userRepository.read(id) != null) {
-            System.out.println("Пользователь с таким идентификатором уже существует.");
-            return;
+            throw new RuntimeException("Пользователь с таким идентификатором уже существует.");
         }
 
         if (!isValidEmail(email)) {
-            System.out.println("Некорректный формат почты.");
-            return;
+            throw new RuntimeException("Некорректный формат почты.");
         }
 
         User newUser = new User();
@@ -37,7 +35,6 @@ public class UserServiceImpl implements UserService {
         newUser.setName(name);
         newUser.setEmail(email);
         userRepository.create(newUser);
-        System.out.println("Пользователь успешно создан...");
     }
 
     private boolean isValidEmail(String email) {
@@ -50,23 +47,17 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void findById(Long id) {
+    public User findById(Long id) {
         User user = userRepository.read(id);
-        if (user != null) {
-            System.out.println("Данные пользователя:");
-            System.out.println("ID: " + user.getId());
-            System.out.println("Name: " + user.getName());
-            System.out.println("Email: " + user.getEmail());
-            System.out.println("Взятые книги : " + user.getBorrowedBooksList());
-        } else {
-            System.out.println("Пользователь с ID " + id + " не найден.");
+        if (user == null) {
+            throw new RuntimeException("Пользователь с ID " + id + " не найден.");
         }
+        return user;
     }
 
     @Override
     public void deleteById(Long id) {
         userRepository.delete(id);
-        System.out.println("Пользователь успешно удален...");
     }
 
     @Override
@@ -77,31 +68,26 @@ public class UserServiceImpl implements UserService {
             user.setEmail(email);
             userRepository.update(user);
         }
-        System.out.println("Пользователь успешно обновлен...");
     }
 
     @Override
     public void borrowBook(Long userId, Long bookId) {
         User user = userRepository.read(userId);
         if (user == null) {
-            System.out.println("Пользователь с ID " + userId + " не найден.");
-            return;
+            throw new RuntimeException("Пользователь с ID " + userId + " не найден.");
         }
 
         Book book = bookRepository.read(bookId);
         if (book == null) {
-            System.out.println("Книга с ID " + bookId + " не найдена.");
-            return;
+            throw new RuntimeException("Книга с ID " + bookId + " не найдена.");
         }
 
         if (!book.isAvailable()) {
-            System.out.println("Книга с ID " + bookId + " уже взята в аренду.");
-            return;
+            throw new RuntimeException("Книга с ID " + bookId + " уже взята в аренду.");
         }
 
         user.getBorrowedBooks().add(book);
         book.setAvailable(false);
-        System.out.println("Книга успешно взята в аренду...");
     }
 
     @Override
@@ -115,6 +101,5 @@ public class UserServiceImpl implements UserService {
         } else {
             throw new RuntimeException("User is none or book is already available");
         }
-        System.out.println("Книга успешно возвращена.");
     }
 }

@@ -4,7 +4,7 @@ import models.User;
 
 public interface UserService {
     void createUser(Long id, String name, String email);
-    void findById(Long id);
+    User findById(Long id);
     void deleteById(Long id);
     void updateUser(Long id, String name, String email);
     void borrowBook(Long userId, Long bookId);

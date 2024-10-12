@@ -1,10 +1,11 @@
 package ru.ArtemVolk.NauJava;
 
 import java.util.Scanner;
+
+import models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import business.logic.UserService;
-import models.User;
 
 @Component
 public class ConsoleInputHandler {
@@ -40,21 +41,31 @@ public class ConsoleInputHandler {
                     break;
                 }
                 userService.createUser(Long.valueOf(cmd[1]), cmd[2], cmd[3]);
+                System.out.println("Пользователь успешно создан...");
                 break;
             case "findUser":
-                userService.findById(Long.valueOf(cmd[1]));
+                User user = userService.findById(Long.valueOf(cmd[1]));
+                System.out.println("Данные пользователя:");
+                System.out.println("ID: " + user.getId());
+                System.out.println("Name: " + user.getName());
+                System.out.println("Email: " + user.getEmail());
+                System.out.println("Взятые книги : " + user.getBorrowedBooksList());
                 break;
             case "deleteUser":
                 userService.deleteById(Long.valueOf(cmd[1]));
+                System.out.println("Пользователь успешно удален...");
                 break;
             case "updateUser":
                 userService.updateUser(Long.valueOf(cmd[1]), cmd[2], cmd[3]);
+                System.out.println("Пользователь успешно обновлен...");
                 break;
             case "borrowBook":
                 userService.borrowBook(Long.valueOf(cmd[1]), Long.valueOf(cmd[2]));
+                System.out.println("Книга успешно взята в аренду...");
                 break;
             case "returnBook":
                 userService.returnBook(Long.valueOf(cmd[1]), Long.valueOf(cmd[2]));
+                System.out.println("Книга успешно возвращена.");
                 break;
             default:
                 System.out.println("Неизвестная команда...");
