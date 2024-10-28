@@ -2,47 +2,46 @@ package ru.ArtemVolk.NauJava.controllers;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import ru.ArtemVolk.NauJava.crud.repository.UserRepository;
+import ru.ArtemVolk.NauJava.details.UserDetailsServiceImpl;
 import ru.ArtemVolk.NauJava.entity.Address;
 import ru.ArtemVolk.NauJava.entity.User;
 
 import java.util.List;
 
-@RestController
-@RequestMapping("/users")
+@Controller
+@RequestMapping("/custom/users")
 public class UserController {
     UserRepository userRepository;
+    private final UserDetailsServiceImpl userService;
 
     @Autowired
-    public UserController(UserRepository userRepository) {
+    public UserController(UserRepository userRepository, UserDetailsServiceImpl userService) {
         this.userRepository = userRepository;
+        this.userService = userService;
     }
 
-    @GetMapping("/find-by-name-and-gender")
-    public List<User> findByNameAndGender(@RequestParam String name, @RequestParam String gender) {
-        return userRepository.findByNameAndGender(name, gender);
-    }
-
-    @GetMapping("/find-by-phone-number")
-    public List<User> findByPhoneNumber(@RequestParam String phoneNumber) {
-        return userRepository.findByPhoneNumber(phoneNumber);
-    }
-
-    @GetMapping("/find-by-address")
-    public User findByAddress(@RequestParam Address address) {
-        return userRepository.findByAddress(address);
-    }
-
-    @GetMapping("/users")
-    public String getUsers(Model model) {
-        List<User> users = (List<User>) userRepository.findAll();
+    @GetMapping("/list")
+    public String getUsersList(Model model)
+    {
+        var users = userRepository.findAll();
         model.addAttribute("users", users);
-        return "users";
+        return "usersTable";
+    }
+
+    @GetMapping("/registration")
+    public String getRegistration() {
+        return "registration";
+    }
+
+    @PostMapping("/registration")
+    @ResponseBody
+    public User addRegistration(User user) {
+        userService.addUser(user);
+        return user;
     }
 }
 

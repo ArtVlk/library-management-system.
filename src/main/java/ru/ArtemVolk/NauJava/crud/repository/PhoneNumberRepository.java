@@ -4,6 +4,6 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import ru.ArtemVolk.NauJava.entity.PhoneNumber;
 
-@RepositoryRestResource
+@RepositoryRestResource(path = "phone_numbers")
 public interface PhoneNumberRepository extends CrudRepository<PhoneNumber, Long> {
 }

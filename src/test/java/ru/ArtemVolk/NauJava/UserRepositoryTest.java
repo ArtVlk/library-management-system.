@@ -18,6 +18,9 @@ import ru.ArtemVolk.NauJava.services.UserService;
 import java.util.List;
 import java.util.UUID;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 @SpringBootTest
 class UserRepositoryTest {
     private final UserRepository userRepository;
@@ -53,12 +56,12 @@ class UserRepositoryTest {
 
         List<User> foundUsers = userRepository.findByNameAndGender(userName, userGender);
 
-        Assertions.assertEquals(1, foundUsers.size());
+        assertEquals(1, foundUsers.size());
         User foundUser = foundUsers.getFirst();
-        Assertions.assertNotNull(foundUser);
-        Assertions.assertEquals(user.getId(), foundUser.getId());
-        Assertions.assertEquals(userName, foundUser.getName());
-        Assertions.assertEquals(userGender, foundUser.getGender());
+        assertNotNull(foundUser);
+        assertEquals(user.getId(), foundUser.getId());
+        assertEquals(userName, foundUser.getName());
+        assertEquals(userGender, foundUser.getGender());
     }
 
 
@@ -79,11 +82,11 @@ class UserRepositoryTest {
 
         List<User> foundUsers = userRepository.findByPhoneNumber(phoneNumber);
 
-        Assertions.assertEquals(1, foundUsers.size());
+        assertEquals(1, foundUsers.size());
         User foundUser = foundUsers.getFirst();
-        Assertions.assertNotNull(foundUser);
-        Assertions.assertEquals(user.getId(), foundUser.getId());
-        Assertions.assertEquals(phoneNumber, foundUser.getPhoneNumber().getNumber());
+        assertNotNull(foundUser);
+        assertEquals(user.getId(), foundUser.getId());
+        assertEquals(phoneNumber, foundUser.getPhoneNumber().getNumber());
     }
 
 
@@ -103,9 +106,9 @@ class UserRepositoryTest {
 
         User foundUser = userRepository.findByAddress(address);
 
-        Assertions.assertNotNull(foundUser);
-        Assertions.assertEquals(user.getId(), foundUser.getId());
-        Assertions.assertEquals(address.getId(), foundUser.getAddress().getId());
+        assertNotNull(foundUser);
+        assertEquals(user.getId(), foundUser.getId());
+        assertEquals(address.getId(), foundUser.getAddress().getId());
     }
 
     @Test
@@ -122,12 +125,12 @@ class UserRepositoryTest {
 
         List<User> foundUsers = userRepositoryCustom.findByNameAndGender(userName, userGender);
 
-        Assertions.assertEquals(1, foundUsers.size());
+        assertEquals(1, foundUsers.size());
         User foundUser = foundUsers.getFirst();
-        Assertions.assertNotNull(foundUser);
-        Assertions.assertEquals(user.getId(), foundUser.getId());
-        Assertions.assertEquals(userName, foundUser.getName());
-        Assertions.assertEquals(userGender, foundUser.getGender());
+        assertNotNull(foundUser);
+        assertEquals(user.getId(), foundUser.getId());
+        assertEquals(userName, foundUser.getName());
+        assertEquals(userGender, foundUser.getGender());
     }
 
     @Test
@@ -147,11 +150,41 @@ class UserRepositoryTest {
 
         List<User> foundUsers = userRepositoryCustom.findByPhoneNumber(phoneNumber);
 
-        Assertions.assertEquals(1, foundUsers.size());
+        assertEquals(1, foundUsers.size());
         User foundUser = foundUsers.getFirst();
-        Assertions.assertNotNull(foundUser);
-        Assertions.assertEquals(user.getId(), foundUser.getId());
-        Assertions.assertEquals(phoneNumber, foundUser.getPhoneNumber().getNumber());
+        assertNotNull(foundUser);
+        assertEquals(user.getId(), foundUser.getId());
+        assertEquals(phoneNumber, foundUser.getPhoneNumber().getNumber());
 
+    }
+
+    @Test
+    @Transactional
+    @Rollback
+    public void testFindByName() {
+        String userName = UUID.randomUUID().toString();
+
+        User user = new User();
+        user.setName(userName);
+        userRepository.save(user);
+
+        User foundUser = userRepository.findByName(userName);
+
+        assertNotNull(foundUser);
+        assertEquals(userName, foundUser.getName());
+    }
+
+    @Test
+    public void testAddUser() {
+        String userName = UUID.randomUUID().toString();
+        User user = new User();
+        user.setName(userName);
+
+        userRepository.addUser(user);
+
+        User foundUser = userRepository.findByName(userName);
+
+        assertNotNull(foundUser);
+        assertEquals(userName, foundUser.getName());
     }
 }

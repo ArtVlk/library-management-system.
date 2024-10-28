@@ -2,7 +2,9 @@ package ru.ArtemVolk.NauJava.entity;
 
 import jakarta.persistence.*;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "users")
@@ -10,7 +12,10 @@ public class User {
     @Id
     @GeneratedValue
     private Long id;
+    private String username;
+    private String password;
     private String name;
+    private Role role;
     @OneToOne
     @JoinColumn(name = "phone_number_id")
     private PhoneNumber phoneNumber;
@@ -67,5 +72,29 @@ public class User {
 
     public void setAddress(Address address) {
         this.address = address;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
     }
 }

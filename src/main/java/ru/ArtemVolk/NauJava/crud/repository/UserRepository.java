@@ -11,10 +11,19 @@ import ru.ArtemVolk.NauJava.entity.User;
 
 import java.util.List;
 
-@RepositoryRestResource
+@RepositoryRestResource(path = "users")
 public interface UserRepository extends CrudRepository<User, Long> {
     List<User> findByNameAndGender(String name, String gender);
     @Query("SELECT c FROM User c WHERE c.phoneNumber.number = :phoneNumber")
     List<User> findByPhoneNumber(@Param("phoneNumber") String phoneNumber);
     User findByAddress(Address address);
+
+    //task6
+    User findByName(String name);
+    default void addUser(User user) {
+        save(user);
+    }
+
+    //for deatils
+    User findByUsername(String username);
 }
