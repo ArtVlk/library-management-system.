@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <title>Отчет</title>
+</head>
+<body>
+<h1>Отчет</h1>
+<p>Количество зарегистрированных пользователей: <span th:text="${report.userCount}"></span></p>
+<p>Затраченное время: <span th:text="${report.userCountTime}"></span> мс</p>
+<h2>Книжек в системе:</h2>
+<ul>
+    <li th:each="book : ${report.books}">
+        <span th:text="${book.name}"></span>
+    </li>
+</ul>
+<p>Затраченное время на вывод книг: <span th:text="${report.booksTime}"></span> мс</p>
+<p>Общее затраченное время: <span th:text="${report.totalTime}"></span> мс</p>
+</body>
+</html>
